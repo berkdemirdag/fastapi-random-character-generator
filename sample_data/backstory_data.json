@@ -1,0 +1,44 @@
+{
+  "origins": [
+    "{name} grew up in a small farming community",
+    "{name} was raised in a busy city tenement",
+    "{name} spent their childhood in a remote military outpost",
+    "{name} lived among a group of traveling merchants",
+    "{name} was an apprentice in a local smithy",
+    "{name} grew up in the slums of a major port",
+    "{name} was raised by a strictly religious family",
+    "{name} lived in a quiet village near the border",
+    "{name} spent their early years in a lakeside fishing town",
+    "{name} was part of a large, struggling family in the capital",
+    "{name} was raised by an uncle who ran a local tavern",
+    "{name} spent their youth working in the family stables"
+  ],
+  "middles": [
+    "{pronoun} eventually worked as a low-level guard",
+    "{pronoun} spent several years working on a merchant ship",
+    "{pronoun} made a living as a small-time thief",
+    "{pronoun} joined a local militia to pay off a debt",
+    "{pronoun} left home to find work in a neighboring kingdom",
+    "{pronoun} spent time as a messenger for the local lord",
+    "{pronoun} worked as a bouncer in a rough dockside bar",
+    "{pronoun} was forced to flee after a deal went wrong",
+    "{pronoun} earned coin by hunting small game in the woods",
+    "{pronoun} served as an assistant to a traveling scholar",
+    "{pronoun} spent a few years drifting from town to town",
+    "{pronoun} took up odd jobs in various mining camps"
+  ],
+  "conclusions": [
+    "but {pronoun} left that life behind after a dispute over gold.",
+    "and now {pronoun} is looking for a fresh start elsewhere.",
+    "until {pronoun} was framed for a crime {pronoun} didn't commit.",
+    "but a sudden attack on the road changed everything.",
+    "and {pronoun} is currently trying to save up enough to go home.",
+    "before deciding to try {possessive} luck as an adventurer.",
+    "but {pronoun} is still being followed by old enemies.",
+    "until {pronoun} realized there was more money in adventuring.",
+    "and now {pronoun} carries a map to a supposed treasure.",
+    "but {pronoun} is tired of working for other people.",
+    "before a chance meeting led to a much better offer.",
+    "and {pronoun} is now searching for a missing family member."
+  ]
+}
