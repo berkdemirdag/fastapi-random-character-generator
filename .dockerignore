@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+# Secrets
+.env
+.env_example
+# Python junk
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv/
+.pytest_cache
+.coverage
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+# Documentation
+README.md
