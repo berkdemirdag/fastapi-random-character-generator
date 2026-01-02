@@ -68,3 +68,6 @@ def generate_backstory(name: str, gender: Character_Gender) -> str:
     middle = random.choice(STORY_DATA["middles"]).format(**name_mapping).capitalize()
     conclusion = random.choice(STORY_DATA["conclusions"]).format(**name_mapping)
     return f"{origin}. {middle} {conclusion}"
+
+def get_status_message():
+    return "Character Generator Module is imported properly."
