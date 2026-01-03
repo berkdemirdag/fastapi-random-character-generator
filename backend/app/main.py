@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.schemas import Character_Request
 from service.character_generator import Generated_Character, get_status_message
-import psycopg2
+import psycopg
 import os  
 
 app = FastAPI()
@@ -26,7 +26,7 @@ def test_connection():
     conn_status = "Failed"
     try:
         # We just try to connect and check the version
-        conn = psycopg2.connect(db_url)
+        conn = psycopg.connect(db_url)
         conn_status = "Success! Postgres is reachable."
         conn.close()
     except Exception as e:
