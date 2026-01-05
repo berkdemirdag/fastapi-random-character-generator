@@ -4,6 +4,8 @@
 # Secrets
 .env
 .env_example
+#Test files
+**/sample_data/
 # Python junk
 __pycache__/
 *.pyc

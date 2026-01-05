@@ -39,6 +39,7 @@ services:
       - "8501:8501"
     environment:
       - BACKEND_URL=${BACKEND_URL}
+      - EXTERNAL_BACKEND_URL=${EXTERNAL_BACKEND_URL}
     depends_on:
       - backend
 

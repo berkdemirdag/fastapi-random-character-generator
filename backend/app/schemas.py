@@ -53,7 +53,7 @@ class CharacterCreate(BaseModel):
     stat_cha: int = 10
     backstory: str
 
-class CharacterRead(CharacterGenerateRequest):
+class CharacterinDB(CharacterCreate):
     id: int
     user_id: int
     name: str

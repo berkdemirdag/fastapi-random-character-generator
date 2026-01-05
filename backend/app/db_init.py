@@ -2,7 +2,7 @@ import time
 import psycopg
 import os
 
-import app.auth as auth
+import app.security as security
 import app.schemas as schemas
 import app.crud as crud
 import app.database as database
@@ -164,9 +164,9 @@ def seed_sample_users():
     try:
         with database.get_db_context() as conn:
             for username, password in sample_users:
-                hashed_password = auth.get_password_hash(password)
+                hashed_password = security.get_password_hash(password)
                 user_in = schemas.UserCreate(username=username, password=hashed_password)
-                crud.create_user(conn, user_in)
+                crud.create_user(conn, user_in, hashed_password)
         print("Sample users inserted successfully.")
     except Exception as e:
         print(f"Error during seeding sample users: {e}")

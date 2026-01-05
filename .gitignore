@@ -15,6 +15,7 @@ dist/
 # Databases (Local testing junk)
 *.sqlite3
 postgres_data/
+**/sample_data/
 
 # OS Specific
 .DS_Store

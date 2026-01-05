@@ -23,7 +23,7 @@ def create_character(conn, char: schemas.CharacterCreate, user_id: int):
     RETURNING *;
     """
     params = (
-        user_id, char.name, char.race, char.gender, char.backstory,
+        user_id, char.name, char.race.value, char.gender.value, char.backstory,
         char.stat_str, char.stat_dex, char.stat_con, 
         char.stat_int, char.stat_wis, char.stat_cha
     )
@@ -31,34 +31,33 @@ def create_character(conn, char: schemas.CharacterCreate, user_id: int):
         cur.execute(query, params)
         return cur.fetchone()
 
-def get_user_by_id(conn, user_id: int):
-    #Fetch a user by their ID. DOES NOT RETURN HASHED PASSWORD!
-    query = "SELECT id, username, created_at, disabled FROM users WHERE id = %s;"
+def get_user_by_id(conn, user_id: int) -> dict:
+    query = "SELECT * FROM users WHERE id = %s;"
     with conn.cursor(row_factory=dict_row) as cur:
         cur.execute(query, (user_id,))
         return cur.fetchone()
 
-def get_user_by_username(conn, username: str):
+def get_user_by_username(conn, username: str) -> dict:
     query = "SELECT * FROM users WHERE username = %s;"
     with conn.cursor(row_factory=dict_row) as cur:
         cur.execute(query, (username,))
         return cur.fetchone()
     
-def get_character(conn, char_id: int):
+def get_character(conn, char_id: int) -> dict:
     #Fetch a single character by its ID.
     query = "SELECT * FROM characters WHERE id = %s;"
     with conn.cursor(row_factory=dict_row) as cur:
         cur.execute(query, (char_id,))
         return cur.fetchone()
 
-def get_user_characters(conn, user_id: int):
+def get_user_characters(conn, user_id: int) -> list[dict]:
     #Fetch all characters belonging to a specific user.
     query = "SELECT * FROM characters WHERE user_id = %s ORDER BY created_at DESC LIMIT 20 OFFSET 0;"
     with conn.cursor(row_factory=dict_row) as cur:
         cur.execute(query, (user_id,))
         return cur.fetchall()
     
-def get_random_seed(conn, category: str):
+def get_random_seed(conn, category: str) -> str | None:
     #Fetch a random seed entry from the random_seeds table for a given category.
     query = "SELECT content FROM random_seeds WHERE category = %s ORDER BY RANDOM() LIMIT 1;"
     with conn.cursor() as cur:
@@ -66,7 +65,7 @@ def get_random_seed(conn, category: str):
         result = cur.fetchone()
         return result[0] if result else None
     
-def update_character(conn, char_id: int, user_id: int, updates: schemas.CharacterUpdate):
+def update_character(conn, char_id: int, user_id: int, updates: schemas.CharacterUpdate) -> dict | None:
     #Updates character fields based on provided data.
     #Extract only the fields that are set (not None)
     update_data = updates.model_dump(exclude_unset=True)
