@@ -172,7 +172,6 @@ def seed_sample_users():
         print(f"Error during seeding sample users: {e}")
 
 def seed_sample_characters():
-    # This function can be implemented to add sample characters if needed
     pass
 
 if __name__ == "__main__":

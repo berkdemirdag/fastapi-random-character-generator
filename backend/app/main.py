@@ -5,7 +5,7 @@ from app.routers import user as user_router
 
 app = FastAPI(
     title="Random Character Generator API",
-    description="A professional API for D&D-style character management",
+    description="An API for D&D-style character management",
     version="1.0.0"
 )
 app.include_router(auth_router.router)
@@ -15,6 +15,6 @@ app.include_router(character_router.router)
 @app.get("/")
 def root():
     return {
-        "message": "Welcome to the Random Character Generator API",
+        "message": "Welcome to Character Management API",
         "docs": "/docs"
     }

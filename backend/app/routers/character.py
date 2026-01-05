@@ -36,9 +36,6 @@ def list_my_characters(
     current_user: Annotated[schemas.UserinDB, Depends(security.get_current_user)],
     db = Depends(database.get_db)
 ):
-    """
-    Returns all characters belonging to the authenticated user.
-    """
     characters = crud.get_user_characters(db, current_user.id)
     return characters
 
@@ -48,9 +45,6 @@ def get_character(
     current_user: Annotated[schemas.UserinDB, Depends(security.get_current_user)],
     db = Depends(database.get_db)
 ):
-    """
-    Fetch a specific character by its ID, ensuring it belongs to the authenticated user.
-    """
     character = crud.get_character(db, char_id)
     if character is None or character["user_id"] != current_user.id:
         raise HTTPException(status_code=404, detail="Character not found")
@@ -62,9 +56,6 @@ def delete_character(
     current_user: Annotated[schemas.UserinDB, Depends(security.get_current_user)],
     db = Depends(database.get_db)
 ):
-    """
-    Deletes a specific character by its ID, ensuring it belongs to the authenticated user.
-    """
     character = crud.get_character(db, char_id)
     if character is None or character["user_id"] != current_user.id:
         raise HTTPException(status_code=404, detail="Character not found")
@@ -78,9 +69,6 @@ def update_character_endpoint(
     current_user: Annotated[schemas.UserinDB, Depends(security.get_current_user)],
     db = Depends(database.get_db)
 ):
-    """
-    Partially updates a character. Only fields provided in the request body will be changed.
-    """
     updated_char = crud.update_character(db, char_id, current_user.id, updates)
     if updated_char is None:
         raise HTTPException(

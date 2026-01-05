@@ -3,16 +3,13 @@ from typing import Annotated
 import os
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, status, APIRouter
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt.exceptions import InvalidTokenError
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from pwdlib import PasswordHash
-from pydantic import BaseModel
 
 import app.database as database
 import app.crud as crud
 import app.schemas as schemas
-import app.database
 
 
 SECRET_KEY =  os.getenv("JWT_SECRET_KEY")
@@ -65,12 +62,9 @@ def get_current_user(
     except (jwt.InvalidTokenError, jwt.ExpiredSignatureError, Exception):
         raise credentials_exception
 
-    # Use your crud function and pass the db connection
     user = crud.get_user_by_username(db, username=username)
     
     if user is None:
-        # Standard security practice: return 401 even if user is missing
-        # so attackers don't know which usernames exist
         raise credentials_exception
         
     return schemas.UserinDB(**user)
