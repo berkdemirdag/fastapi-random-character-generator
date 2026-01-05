@@ -16,7 +16,7 @@ dist/
 *.sqlite3
 postgres_data/
 **/sample_data/
-
+*.excalidraw
 # OS Specific
 .DS_Store
 Thumbs.db
