@@ -5,8 +5,8 @@ import app.database as database
 import app.security as security
 
 router = APIRouter(
-    prefix="/auth",
-    tags=["auth"],  
+    prefix="/user",
+    tags=["user"],  
 )
 
 @router.post("/register", response_model=schemas.UserRead)

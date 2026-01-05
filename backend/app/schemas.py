@@ -61,8 +61,8 @@ class CharacterinDB(CharacterCreate):
 
 class CharacterUpdate(BaseModel):
     name: Optional[str] = None
-    race: Optional[str] = None
-    gender: Optional[str] = None
+    race: Optional[Character_Race] = None
+    gender: Optional[Character_Gender] = None
     backstory: Optional[str] = None
     stat_str: Optional[int] = None
     stat_dex: Optional[int] = None
