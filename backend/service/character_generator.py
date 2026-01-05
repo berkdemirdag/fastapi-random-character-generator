@@ -1,73 +1,60 @@
 import random
-import json
-from enum import Enum
-from pathlib import Path
-from pydantic import BaseModel
-
-
-def load_json(file_path: Path):
-    with open(file_path, "r") as f:
-        return json.load(f)
-
-
-STORY_DATA = load_json(Path(__file__).parent.parent / "sample_data" /"backstory_data.json")
-NAME_DATA = load_json(Path(__file__).parent.parent / "sample_data" / "name_data.json")
-
-
-class Character_Race(str, Enum): 
-      
-    HUMAN = "human"
-    ELF = "elf"
-    DWARF = "dwarf"
-
-
-class Character_Gender(str, Enum):
-
-    MALE = "male"
-    FEMALE = "female"
-    NONBINARY = "nonbinary"
-
-
-class Generated_Character():
-
-    def __init__(
-            self, 
-            race: Character_Race | None = None, 
-            gender: Character_Gender | None = None):
-        
-        self.race = race or random.choice(list(Character_Race))
-        self.gender = gender or random.choice(list(Character_Gender))
-        self.name = generate_character_name(self.race, self.gender)
-        self.backstory = generate_backstory(self.name, self.gender)
-
-
-def get_first_names_list(race_val: str, gender: str):
-
-    race_names = NAME_DATA["first_names"][race_val]
-    if gender == "nonbinary":
-        return race_names["male"] + race_names["female"]
-    return race_names[gender]
-
-
-def generate_character_name(race, gender):
-
-    first_names = get_first_names_list(race.value, gender.value)
-    last_names = NAME_DATA["last_names"][race.value]
-    full_name = f"{random.choice(first_names)} {random.choice(last_names)}"
-    return full_name
-
-
-def generate_backstory(name: str, gender: Character_Gender) -> str:
-
-    name_mapping = {
-        "name": name,
-        "pronoun": "he" if gender == Character_Gender.MALE else "she" if gender == Character_Gender.FEMALE else "they",
-        "possessive": "his" if gender == Character_Gender.MALE else "her" if gender == Character_Gender.FEMALE else "their"     
-    }
-    origin = random.choice(STORY_DATA["origins"]).format(**name_mapping)
-    middle = random.choice(STORY_DATA["middles"]).format(**name_mapping).capitalize()
-    conclusion = random.choice(STORY_DATA["conclusions"]).format(**name_mapping)
-    return f"{origin}. {middle} {conclusion}"
+import app.schemas as schemas
+import app.crud as crud
+import app.database as database
 
 def get_status_message():
     return "Character Generator Module is imported properly."
+
+def generate_character(request: schemas.CharacterGenerateRequest) -> schemas.CharacterCreate:
+    race = request.race
+    gender = request.gender
+    name = generate_character_name(race, gender)
+    backstory = generate_backstory(name, gender)
+    stats = {
+        "stat_str": roll_4d6_drop_lowest(),
+        "stat_dex": roll_4d6_drop_lowest(),
+        "stat_con": roll_4d6_drop_lowest(),
+        "stat_int": roll_4d6_drop_lowest(),
+        "stat_wis": roll_4d6_drop_lowest(),
+        "stat_cha": roll_4d6_drop_lowest(),
+    }
+    character = schemas.CharacterCreate(
+        name=name,
+        race=race,
+        gender=gender,
+        backstory=backstory,
+        **stats
+    )
+    return character
+
+def generate_character_name(race: schemas.Character_Race, gender: schemas.Character_Gender) -> str:
+    with database.get_db_context() as conn:
+        if gender.value == "nonbinary":
+            name_gender = random.choice(["male", "female"])
+        else:
+            name_gender = gender.value
+        first_name = crud.get_random_seed(conn, f"{race.value}_{name_gender}")
+        last_name = crud.get_random_seed(conn, f"{race.value}_surname")
+    full_name = f"{first_name} {last_name}"
+    return full_name
+
+def generate_backstory(name: str, gender: schemas.Character_Gender) -> str:
+    with database.get_db_context() as conn:
+        origin = crud.get_random_seed(conn, "backstory_start_fragment")
+        middle = crud.get_random_seed(conn, "backstory_middle_fragment")
+        conclusion = crud.get_random_seed(conn, "backstory_end_fragment")
+    name_mapping = {
+        "name": name,
+        "pronoun": "he" if gender == schemas.Character_Gender.MALE else "she" if gender == schemas.Character_Gender.FEMALE else "they",
+        "possessive": "his" if gender == schemas.Character_Gender.MALE else "her" if gender == schemas.Character_Gender.FEMALE else "their"     
+    }
+    origin = origin.format(**name_mapping)
+    middle = middle.format(**name_mapping).capitalize()
+    conclusion = conclusion.format(**name_mapping)
+    return f"{origin}. {middle} {conclusion}"
+
+def roll_4d6_drop_lowest() -> int:
+    rolls = [random.randint(1, 6) for _ in range(4)]
+    rolls.remove(min(rolls))
+    return sum(rolls)

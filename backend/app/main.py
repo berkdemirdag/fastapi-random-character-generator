@@ -1,20 +1,15 @@
 from fastapi import FastAPI
-from app.schemas import Character_Request
-from service.character_generator import Generated_Character, get_status_message
 import psycopg
-import os  
+import os
+
+import app.schemas as schemas
+from app.auth import router as auth_router
+from service.character_generator import generate_character, get_status_message
+
+
 
 app = FastAPI()
-@app.post("/generate_character")
-async def generate_character(request: Character_Request):
-    character = Generated_Character(race=request.race, gender=request.gender)
-    character_data = {
-        "name": character.name,
-        "race": character.race,
-        "gender": character.gender,
-        "backstory": character.backstory
-    }
-    return character_data
+app.include_router(auth_router)
 
 @app.get("/test")
 def test_connection():
@@ -36,3 +31,8 @@ def test_connection():
         "module_import": logic_data,
         "database_connectivity": conn_status,
     }
+
+@app.post("/generate_character", response_model=schemas.CharacterCreate)
+def generate_character_endpoint(request: schemas.CharacterGenerateRequest):
+    character = generate_character(request)
+    return character
