@@ -7,7 +7,6 @@ import app.schemas as schemas
 import app.crud as crud
 import app.database as database
 
-# Grab these from your environment variables
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 def connect_with_retry(url, retries=10, delay=3):
